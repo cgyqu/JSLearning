@@ -1,0 +1,16 @@
+﻿<div id="content">
+</div>
+<script src="~/js/common.js"></script>
+<script type="text/javascript">
+  var length = 10;
+  var obj = {
+      length:5,
+      func1: function(){
+          append(length);
+      }
+  };
+  obj.func1();
+  var f1 = obj.func1;
+  f1();
+  new f1();
+</script>

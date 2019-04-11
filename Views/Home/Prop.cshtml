@@ -1,0 +1,17 @@
+﻿<div id="content">
+</div>
+<script src="~/js/common.js"></script>
+<script type="text/javascript">
+    function Person(){
+    }
+    //定义属性，并给定默认值
+    Person.prototype.name = "test";
+    var person = new Person();
+    person.name="cgymy";
+    append(person.name);
+    var person1 = new Person() ;
+    append(person1.name);
+    //实例的__proto === Person.prototype
+    append("__proto__  == prototype:" + (person1.__proto__===Person.prototype));
+    append("constructor == Person:" + (Person === Person.prototype.constructor));
+</script>
