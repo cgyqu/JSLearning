@@ -1,21 +1,16 @@
+FROM microsoft/dotnet:sdk AS build-env
+WORKDIR /app
 
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
 
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-echo "start build"
-git clone 
-
-
-dotnet publish -o /home/cgymy/publish/JsLearning
-
-cd /home/cgymy/publish/JsLearning
-
-echo "start docker build"
-docker build -t jstest .
-
-echo "start docker service"
-docker run -it -p 3000:3000 jstest
-
-
-
-
-
+# Build runtime image
+FROM microsoft/dotnet:aspnetcore-runtime
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "JsLearning.dll"]
