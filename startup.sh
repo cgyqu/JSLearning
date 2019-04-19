@@ -1,16 +1,14 @@
-FROM microsoft/dotnet:sdk AS build-env
-WORKDIR /app
-
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM microsoft/dotnet:aspnetcore-runtime
-WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "JsLearning.dll"]
+echo "start git clone..."
+# 拉取最新代码
+ls JSLearning && cd JSLearning && git pull)||git clone git@github.com:cgyqu/JSLearning.git && cd JSLearning
+echo "git clone finished!"
+# 进入目录
+cd JSLearning &&
+(
+echo "当前目录:"`pwd`
+echo "start docker build"
+sudo docker build -t JSLearning .
+echo "docker build suceess!"
+echo "start JSLearning service"
+)
+docker run -it -p 3000:3000 JSLearning
