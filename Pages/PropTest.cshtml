@@ -1,0 +1,38 @@
+@page
+
+<input type="button" onclick="test()" value="test">
+<input type="button" onclick="test1()" value="test1">
+<input type="button" onclick="reset()" value="clear">
+<div id="content">
+</div>
+<script src="~/js/common.js"></script>
+<script type="text/javascript">
+    function test() {
+        var A = function () { }
+        A.prototype.n = 1;
+        var b = new A();
+        A.prototype = {
+            n: 2,
+            m: 3
+        };
+        var c = new A();
+        append("b.n:" + b.n);
+        append("b.m:" + b.m);
+        append("c.n:" + c.n);
+        append("c.n:" + b.n);
+    }
+    function test1() {
+        var F = function () { };
+        Object.prototype.a = function () {
+            append('a()')
+        };
+        Function.prototype.b = function () {
+            append('b()')
+        }
+        var f = new F();
+        append("f.a():" + f.a());
+        append("f.b():" + f.b());
+        append("F.a():" + F.a());
+        append("F.a():" + F.a());
+    }
+</script>

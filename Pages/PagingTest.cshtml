@@ -1,0 +1,18 @@
+@page
+<input type="button" onclick="paging.prePage()" value="上一页" />
+<input type="button" onclick="paging.nextPage()" value="下一页" />
+<script src="~/js/Paging.js"></script>
+<script type="text/javascript">
+    var paging;
+    window.onload = function () {
+        paging = new Paging({
+            pageNumber: 1,
+            pageSize: 20,
+            url: "http://test.ly.com",
+            data:{},
+            callback: function(res){
+                alert(JSON.stringify(res));
+            }
+        });
+    }
+</script>
