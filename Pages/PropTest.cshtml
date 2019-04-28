@@ -19,7 +19,7 @@
         append("b.n:" + b.n);
         append("b.m:" + b.m);
         append("c.n:" + c.n);
-        append("c.n:" + b.n);
+        append("c.m:" + c.m);
     }
     function test1() {
         var F = function () { };
@@ -30,9 +30,10 @@
             append('b()')
         }
         var f = new F();
-        append("f.a():" + f.a());
-        append("f.b():" + f.b());
-        append("F.a():" + F.a());
-        append("F.a():" + F.a());
+        f.a();
+        F.a();
+        F.b();
+        f.b();
+
     }
 </script>
