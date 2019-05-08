@@ -1,0 +1,19 @@
+@page
+
+<script type="text/javascript">
+    var test = function () {
+        var id = 0;
+        return {
+            getId: function () {
+                return id;
+            },
+            setId: function (para) {
+                id += para;
+            }
+        }
+    }
+    var func = test();
+    append(func.getId());
+    func.setId(1);
+    append(func.getId());
+</script>

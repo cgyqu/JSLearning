@@ -63,11 +63,12 @@ var Paging = function (obj) {
         this.getData();
     }
     this.init();
+
+    function extend(target, source) {
+        for (var obj in source) {
+            target[obj] = source[obj];
+        }
+        return target;
+    }
 }
 
-function extend(target, source) {
-    for (var obj in source) {
-        target[obj] = source[obj];
-    }
-    return target;
-}
