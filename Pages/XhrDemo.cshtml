@@ -1,0 +1,140 @@
+@page
+<div style="margin-left:50px">
+    <label>url</label>
+    <br />
+    <textarea rows="2" cols="50" id="url">
+    </textarea>
+    <br />
+    <br />
+    <label>data</label>
+    <br />
+    <textarea rows="3" cols="70" id="data">
+     </textarea>
+    <br />
+    <input type="button" value="SendGet" id="sendGet">
+    <input type="button" value="SendPOST" id="SendPOST">
+    <input type="button" value="SendJSONP" id="SendJSONP">
+</div>
+<script type="text/javascript">
+    document.getElementById("sendGet").onclick = function () {
+        var url = document.getElementById("url").value;
+        if (!url) {
+            alert("请输入url!")
+            return;
+        }
+        send(url, "GET");
+    }
+    document.getElementById("SendPOST").onclick = function () {
+        var url = document.getElementById("url").value;
+        if (!url) {
+            alert("请输入url!")
+            return;
+        }
+        var data = document.getElementById("data").value;;
+        send(url, "POST", data);
+    }
+
+    document.getElementById("SendJSONP").onclick = function () {
+        var url = document.getElementById("url").value;
+        if (!url) {
+            alert("请输入url!")
+            return;
+        }
+        if (url.indexOf("?") >= 0)
+            url = url + "&callback=handler"
+        else
+            url = url + "?callback=handler"
+
+        var scri = document.createElement("script");
+        scri.src = url;
+        scri.async = true;
+        document.head.append(scri);
+    }
+    //处理数据
+    var handler = function (result) {
+        console.log(JSON.stringify(result));
+    }
+
+    function send(url, type, data, jsonp) {
+        $.request({
+            url: url,
+            type: type,
+            contentType: jsonp ? "text/html" : "application/json",
+            data: data,
+            jsonp: jsonp,
+            success: function (msg) {
+                console.log(msg);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    var obj = function () {
+        var ajax = {
+            request: function (param) {
+                if (!this.check(param)) {
+                    return;
+                }
+                if (param.jsonp) {
+                    if (param.url.indexOf("?") >= 0)
+                        param.url = param.url + "&callback=" + Date.now()
+                    else
+                        param.url = param.url + "?callback=" + Date.now()
+                }
+                var xhr = this.getXhr();
+                console.log("请求地址:" + param.url);
+                var type = param.type || "GET";
+
+                xhr.open(type, param.url);
+                var contentType = param.contentType || 'application/x-www-form-urlencoded';
+                // xhr.setRequestHeader('content-type', contentType);
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest"); //请求头部，需要服务端同时设置
+                xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+                if (param.data)
+                    xhr.send(param.data);
+                else {
+                    xhr.send();
+                }
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            if (param.success && typeof (param.success) == "function") {
+                                param.success(xhr.responseText);
+                            }
+                        } else {
+                            if (param.error && typeof (param.error) == "function") {
+                                param.error(xhr.statusText);
+                            }
+                        }
+                    }
+                }
+            },
+            getXhr: function () {
+                var httpRequest;
+                if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+                    httpRequest = new XMLHttpRequest();
+                } else if (window.ActiveXObject) { // IE 6 and older
+                    httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                return httpRequest;
+            },
+            check: function (param) {
+                var url = param.url;
+                if (!url) {
+                    if (param.error)
+                        param.error("url is null!");
+                    return false;
+                }
+                return true;
+            },
+            process: function () {
+
+            }
+        }
+        return ajax;
+    }()
+    window.$ = obj;
+</script>

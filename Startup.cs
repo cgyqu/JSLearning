@@ -23,6 +23,18 @@ namespace JsLearning
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(config =>
+            {
+                config.AddPolicy("Default", builder =>
+                 {
+                     //允许5002 的数据来请求调用
+                     string[] orgins = new string[] { "http://localhost:5002" };
+                     builder.AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials();
+                     //.WithOrigins(orgins);
+                 });
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -36,6 +48,7 @@ namespace JsLearning
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseCors("Default");
 
             app.UseStaticFiles();
 
